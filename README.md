@@ -11,8 +11,8 @@ Adding extra rotate and flip actions to symbol style editor ( admin application 
 #### how to use?
 
 
-1.load the module
-2.modify ...\sw_core\modules\sw_common\style_symbol_magik_gui\resources\base\data\symbol_editor_gui.xml
+* load the module
+* modify ...\sw_core\modules\sw_common\style_symbol_magik_gui\resources\base\data\symbol_editor_gui.xml
 
 
     <toolbar name="rotate">
