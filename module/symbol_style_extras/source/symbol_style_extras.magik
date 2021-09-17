@@ -1,0 +1,294 @@
+
+
+_block
+	l_action_defs << {}.new_with(
+				   sw_action_def.new ( :flip_by_centre,
+						       :enabled?, _false,
+						       :image, {:flip, :symbol_style_extras},
+						       :action_message, :flip_by_centre|()| ),	
+				   
+				   sw_action_def.new ( :rotate_clockwise_by_centre,
+						       :enabled?, _false,
+						       :image, {:rotate_clockwise_by_centre, :symbol_style_extras},
+						       :action_message, :rotate_clockwise_by_centre|()| ),								 
+				   
+				   sw_action_def.new ( :rotate_clockwise,
+						       :enabled?, _false,
+						       :image, {:rotate_clockwise, :symbol_style_extras},
+						       :action_message, :rotate_clockwise|()| ),
+				   
+				   sw_action_def.new ( :rotate_counter_clockwise, 
+						       :enabled?, _false,
+						       :image, {:rotate_counter_clockwise, :symbol_style_extras},
+						       :action_message, :rotate_counter_clockwise|()| ))								 
+	
+
+	_for an_action_def _over l_action_defs.fast_elements()
+	_loop
+		style_symbol.add_action_definition ( an_action_def )
+	_endloop
+
+	
+_endblock 
+$
+
+
+_block
+	_local mh << message_handler.new(:style_symbol_manager)
+	mh.create_message(:symbol_flip_by_centre,:en_gb, "Flip using base centre on X axis")
+	mh.create_message(:symbol_rotate_clockwise_by_centre,:en_gb, "Rotate clockwise using base centre")
+	mh.create_message(:symbol_rotate_clockwise,:en_gb, "Rotate clockwise a right angle(90)")
+	mh.create_message(:symbol_rotate_counter_clockwise,:en_gb, "Rotate counter clockwise a right angle(90)")
+_endblock
+$
+
+
+_block 
+	_if style_symbol.method(:original!manage_actions|()|) _is _unset
+	_then
+		style_symbol.define_method_synonym(:original!manage_actions|()|,:manage_actions|()|)
+	_endif
+_endblock
+$
+
+
+
+
+_pragma(classify_level=restricted)
+_private _method style_symbol.manage_actions()
+	##
+	## Manages the enabled state of all actions
+	##
+	_self.original!manage_actions()
+	
+	#start Changes
+	l_enabled? << _self.selection.size _isnt 0
+	_self.action( :flip_by_centre ).enabled? << l_enabled?
+	_self.action( :rotate_clockwise_by_centre ).enabled? << l_enabled? 
+	_self.action( :rotate_clockwise ).enabled? << l_enabled?
+	_self.action( :rotate_counter_clockwise).enabled? << l_enabled?
+
+_endmethod
+$
+
+
+
+
+
+_pragma(classify_level=restricted, usage={subclassable})
+_method geometry_interaction_model.rotate_clockwise_by_centre() 
+	##
+	## Callback method for mirroring the selection (over the 
+	## vertical axis). All geometry except Text can be mirrored.  
+	##
+	
+	_for geom, info _over _self.selected_geometry()
+	_loop
+		#_if geom.geom_category _isnt :text
+		#_then
+			info.rotate_clockwise_by_centre()
+		#_endif
+	_endloop
+	
+	_self.dirty? << _true 
+_endmethod
+$
+
+_pragma(classify_level=restricted, usage={subclassable})
+_method geometry_interaction_model.rotate_clockwise()
+	##
+	## Callback method for mirroring the selection (over the 
+	## vertical axis). All geometry except Text can be mirrored.  
+	##
+	
+	_for geom, info _over _self.selected_geometry()
+	_loop
+		#_if geom.geom_category _isnt :text
+		#_then
+			info.rotate_clockwise()
+		#_endif
+	_endloop
+	
+	_self.dirty? << _true 
+_endmethod
+$
+
+
+
+_pragma(classify_level=restricted, usage={subclassable})
+_method geometry_interaction_model.rotate_counter_clockwise() 
+	##
+	## Callback method for mirroring the selection (over the 
+	## vertical axis). All geometry except Text can be mirrored.  
+	##
+	
+	_for geom, info _over _self.selected_geometry()
+	_loop
+		#_if geom.geom_category _isnt :text
+		#_then
+			info.rotate_counter_clockwise() 
+		#_endif
+	_endloop
+	
+	_self.dirty? << _true 
+_endmethod
+$
+
+
+
+_pragma(classify_level=restricted, usage={subclassable})
+_method geometry_interaction_model.flip_by_centre()
+	##
+	## Callback method for mirroring the selection (over the 
+	## vertical axis). All geometry except Text can be mirrored.  
+	##
+	
+	_for geom, info _over _self.selected_geometry()
+	_loop
+		#_if geom.geom_category _isnt :text
+		#_then
+			info.flip_by_centre()
+		#_endif
+	_endloop
+	
+	_self.dirty? << _true 
+_endmethod
+$
+
+
+
+_pragma(classify_level=restricted)
+_method geometry_interaction_model_geometry_info.flip_by_centre()
+	##
+	## Will flip the geometry (over the horizontal axis) 
+	## 
+	_local centre << coordinate(0,0)
+	_local flip_by_centre << transform.new().scalexy( 1, -1)
+	_self.transform( flip_by_centre )
+_endmethod
+$
+
+
+_pragma(classify_level=restricted)
+_method geometry_interaction_model_geometry_info.rotate_clockwise_by_centre()
+	##
+	## Will flip the geometry (over the horizontal axis) 
+	## 
+	_local centre << coordinate(0,0)
+	_local rotate_clockwise_by_centre << transform.new().scalexy( 1, 1).rotate(-float.half_pi)
+	_self.transform( rotate_clockwise_by_centre )
+_endmethod
+$
+
+_pragma(classify_level=restricted)
+_method geometry_interaction_model_geometry_info.rotate_clockwise()
+	##
+	## Will flip the geometry (over the horizontal axis) 
+	## 
+	_local centre << .geometry.bounds.centre
+	_local rotate_clockwise << transform.new().translate(-centre.x, -centre.y).scalexy( 1, 1).rotate(-float.half_pi).translate( centre.x , centre.y )
+	_self.transform( rotate_clockwise )	
+_endmethod
+$
+
+
+_pragma(classify_level=restricted)
+_method geometry_interaction_model_geometry_info.rotate_counter_clockwise() 
+	##
+	## Will flip the geometry (over the horizontal axis) 
+	## 
+	_local centre << .geometry.bounds.centre
+	_local rotate_clockwise << transform.new().translate(-centre.x, -centre.y).scalexy( 1, 1).rotate(float.half_pi).translate( centre.x , centre.y )
+	_self.transform( rotate_clockwise )	
+_endmethod
+$
+
+_pragma(classify_level=restricted)
+_method style_symbol.rotate_clockwise_by_centre()
+	##
+	## Callback method for mirroring the selection (over the 
+	## vertical axis). All geometry except Text can be mirrored.  
+	##
+	# Record the current state
+	_self.record_state( _self.message(:rotate_clockwise_by_centre) )
+
+	# rotate the selection
+	_super.rotate_clockwise_by_centre()
+
+	# Render the result
+	_self.render()
+_endmethod
+$
+
+_pragma(classify_level=restricted)
+_method style_symbol.rotate_clockwise()
+	##
+	## Callback method for mirroring the selection (over the 
+	## vertical axis). All geometry except Text can be mirrored.  
+	##
+	# Record the current state
+	_self.record_state( _self.message(:rotate_clockwise) )
+
+	# Mirror the selection
+	_super.rotate_clockwise()
+
+	# Render the result
+	_self.render()
+_endmethod
+$
+
+
+_pragma(classify_level=restricted)
+_method style_symbol.rotate_counter_clockwise()
+	##
+	## Callback method for mirroring the selection (over the 
+	## vertical axis). All geometry except Text can be mirrored.  
+	##
+	# Record the current state
+	_self.record_state( _self.message(:rotate_counter_clockwise) ) 
+
+	# Mirror the selection
+	_super.rotate_counter_clockwise()
+
+	# Render the result
+	_self.render()
+_endmethod
+$
+
+
+_pragma(classify_level=restricted)
+_method style_symbol.flip_by_centre()
+	##
+	## Callback method for mirroring the selection (over the 
+	## vertical axis). All geometry except Text can be mirrored.  
+	##
+	# Record the current state
+	_self.record_state( _self.message(:mirror) )
+
+	# Mirror the selection
+	_super.flip_by_centre()
+
+	# Render the result
+	_self.render()
+_endmethod
+$
+
+
+
+#
+#	c << _self.geometry.bounds.centre
+#	t << transform.new()
+#	t << t.translate(-c.x,-c.y)
+#	t << t.rotate(-float.half_pi)
+#	t << t.translate(c.x,c.y)
+	
+#C:\sw526\core\sw_core\modules\sw_common\style_symbol_magik_gui\resources\base\data\symbol_editor_gui.xml
+
+
+
+#    <toolbar name="rotate">
+#	<action name="symbols.symbol_flip_by_centre" mnemonic_id="flip_by_centre_m"/>
+#	<action name="symbols.symbol_rotate_clockwise_by_centre" mnemonic_id="rotate_clockwise_by_centre_m"/>
+#	<action name="symbols.symbol_rotate_clockwise" mnemonic_id="rotate_clockwise_m"/>
+#	<action name="symbols.symbol_rotate_counter_clockwise" mnemonic_id="rotate_counter_clockwise_m"/>
+#    </toolbar>
