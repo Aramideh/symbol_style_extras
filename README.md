@@ -15,6 +15,7 @@ Adding extra rotate and flip actions to symbol style editor ( admin application 
 * modify ...\sw_core\modules\sw_common\style_symbol_magik_gui\resources\base\data\symbol_editor_gui.xml
 
 
+``` 
     <toolbar name="rotate">
 		  <action name="symbols.symbol_flip_by_centre" mnemonic_id="flip_by_centre_m"/>
 		  <action name="symbols.symbol_rotate_clockwise_by_centre" mnemonic_id="rotate_clockwise_by_centre_m"/>
@@ -27,3 +28,5 @@ Adding extra rotate and flip actions to symbol style editor ( admin application 
     <!-- other toolbars in the doc -->
 	  <toolbar name="rotate"/>
     </dock>
+
+``` 
