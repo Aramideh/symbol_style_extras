@@ -78,8 +78,7 @@ $
 _pragma(classify_level=restricted, usage={subclassable})
 _method geometry_interaction_model.rotate_clockwise_by_centre() 
 	##
-	## Callback method for mirroring the selection (over the 
-	## vertical axis). All geometry except Text can be mirrored.  
+	##Callback method for rotating clockwise around base centre point
 	##
 	
 	_for geom, info _over _self.selected_geometry()
@@ -97,8 +96,7 @@ $
 _pragma(classify_level=restricted, usage={subclassable})
 _method geometry_interaction_model.rotate_clockwise()
 	##
-	## Callback method for mirroring the selection (over the 
-	## vertical axis). All geometry except Text can be mirrored.  
+	## Callback method for rotating clockwise ( right angle => 90 )
 	##
 	
 	_for geom, info _over _self.selected_geometry()
@@ -118,8 +116,7 @@ $
 _pragma(classify_level=restricted, usage={subclassable})
 _method geometry_interaction_model.rotate_counter_clockwise() 
 	##
-	## Callback method for mirroring the selection (over the 
-	## vertical axis). All geometry except Text can be mirrored.  
+	## Callback method for rotating counter clockwise ( right angle => 90 )
 	##
 	
 	_for geom, info _over _self.selected_geometry()
@@ -139,8 +136,7 @@ $
 _pragma(classify_level=restricted, usage={subclassable})
 _method geometry_interaction_model.flip_by_centre()
 	##
-	## Callback method for mirroring the selection (over the 
-	## vertical axis). All geometry except Text can be mirrored.  
+	## Callback method forfliping around base centre point 
 	##
 	
 	_for geom, info _over _self.selected_geometry()
@@ -160,7 +156,7 @@ $
 _pragma(classify_level=restricted)
 _method geometry_interaction_model_geometry_info.flip_by_centre()
 	##
-	## Will flip the geometry (over the horizontal axis) 
+	## Will flip the geometry around base centre point
 	## 
 	_local centre << coordinate(0,0)
 	_local flip_by_centre << transform.new().scalexy( 1, -1)
@@ -172,7 +168,7 @@ $
 _pragma(classify_level=restricted)
 _method geometry_interaction_model_geometry_info.rotate_clockwise_by_centre()
 	##
-	## Will flip the geometry (over the horizontal axis) 
+	## rotate clockwise aournd base centre point
 	## 
 	_local centre << coordinate(0,0)
 	_local rotate_clockwise_by_centre << transform.new().scalexy( 1, 1).rotate(-float.half_pi)
@@ -183,7 +179,7 @@ $
 _pragma(classify_level=restricted)
 _method geometry_interaction_model_geometry_info.rotate_clockwise()
 	##
-	## Will flip the geometry (over the horizontal axis) 
+	## rotate clockwise
 	## 
 	_local centre << .geometry.bounds.centre
 	_local rotate_clockwise << transform.new().translate(-centre.x, -centre.y).scalexy( 1, 1).rotate(-float.half_pi).translate( centre.x , centre.y )
@@ -195,7 +191,7 @@ $
 _pragma(classify_level=restricted)
 _method geometry_interaction_model_geometry_info.rotate_counter_clockwise() 
 	##
-	## Will flip the geometry (over the horizontal axis) 
+	## rotate counter clockwise
 	## 
 	_local centre << .geometry.bounds.centre
 	_local rotate_clockwise << transform.new().translate(-centre.x, -centre.y).scalexy( 1, 1).rotate(float.half_pi).translate( centre.x , centre.y )
@@ -206,8 +202,7 @@ $
 _pragma(classify_level=restricted)
 _method style_symbol.rotate_clockwise_by_centre()
 	##
-	## Callback method for mirroring the selection (over the 
-	## vertical axis). All geometry except Text can be mirrored.  
+	## Callback method for rotating clockwise around centre base point
 	##
 	# Record the current state
 	_self.record_state( _self.message(:rotate_clockwise_by_centre) )
@@ -223,8 +218,7 @@ $
 _pragma(classify_level=restricted)
 _method style_symbol.rotate_clockwise()
 	##
-	## Callback method for mirroring the selection (over the 
-	## vertical axis). All geometry except Text can be mirrored.  
+	## Callback method for rotating clockwise
 	##
 	# Record the current state
 	_self.record_state( _self.message(:rotate_clockwise) )
@@ -241,8 +235,7 @@ $
 _pragma(classify_level=restricted)
 _method style_symbol.rotate_counter_clockwise()
 	##
-	## Callback method for mirroring the selection (over the 
-	## vertical axis). All geometry except Text can be mirrored.  
+	## Callback method for rotating counter clockwise
 	##
 	# Record the current state
 	_self.record_state( _self.message(:rotate_counter_clockwise) ) 
@@ -259,8 +252,8 @@ $
 _pragma(classify_level=restricted)
 _method style_symbol.flip_by_centre()
 	##
-	## Callback method for mirroring the selection (over the 
-	## vertical axis). All geometry except Text can be mirrored.  
+	## Callback method for fliping the selection (over the 
+	## horizental axis) around the centre point.
 	##
 	# Record the current state
 	_self.record_state( _self.message(:mirror) )
@@ -273,22 +266,3 @@ _method style_symbol.flip_by_centre()
 _endmethod
 $
 
-
-
-#
-#	c << _self.geometry.bounds.centre
-#	t << transform.new()
-#	t << t.translate(-c.x,-c.y)
-#	t << t.rotate(-float.half_pi)
-#	t << t.translate(c.x,c.y)
-	
-#C:\sw526\core\sw_core\modules\sw_common\style_symbol_magik_gui\resources\base\data\symbol_editor_gui.xml
-
-
-
-#    <toolbar name="rotate">
-#	<action name="symbols.symbol_flip_by_centre" mnemonic_id="flip_by_centre_m"/>
-#	<action name="symbols.symbol_rotate_clockwise_by_centre" mnemonic_id="rotate_clockwise_by_centre_m"/>
-#	<action name="symbols.symbol_rotate_clockwise" mnemonic_id="rotate_clockwise_m"/>
-#	<action name="symbols.symbol_rotate_counter_clockwise" mnemonic_id="rotate_counter_clockwise_m"/>
-#    </toolbar>
